@@ -25,9 +25,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Jalankan unit test
+            - name: Jalankan unit test
         run: |
           pytest test_app.py -v
+
+      # --- INI KODE TANTANGAN 1-NYA, COPY DI SINI ---
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+      # -----------------------------------------------
+
 
   build-and-push:
     name: Build & Push ke Docker Hub
