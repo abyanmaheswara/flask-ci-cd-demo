@@ -2,10 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
-    tags: ["v*"] # Ini yang barusan kita tambah
+    branches: [main, develop]  # Tambahin develop di sini
+    tags: ["v*"]
   pull_request:
     branches: [main]
+
 
 jobs:
   test:
@@ -42,10 +43,13 @@ jobs:
           severity: "CRITICAL,HIGH"
       # -----------------------------------------------
 
-  build-and-push:
+    build-and-push:
     name: Build & Push ke Docker Hub
     runs-on: ubuntu-latest
-    needs: test # hanya jalan kalau test sukses
+    needs: test
+    # TAMBAHKAN BARIS DI BAWAH INI:
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+
 
     steps:
       - name: Checkout kode
