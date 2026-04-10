@@ -3,11 +3,13 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [main]
+    tags: ["v*"] # Ini yang barusan kita tambah
   pull_request:
     branches: [main]
 
 jobs:
   test:
+    # sisanya ke bawah sama
     name: Test Aplikasi
     runs-on: ubuntu-latest
 
