@@ -82,13 +82,8 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           color: "#4287f5"
-          username: "GitHub Actions Bot"
+          username: "GitHub Bot"
           message: |
-            **🚀 CI/CD Pipeline Status**
-            ---------------------------------------
-            **Repository:** ${{ github.repository }}
-            **Branch/Tag:** `${{ github.ref_name }}`
-            **Event:** `${{ github.event_name }}`
-            **Status:** ${{ needs.test.result == 'success' && (needs.build-and-push.result == 'success' || needs.build-and-push.result == 'skipped') && '✅ SUCCESS' || '❌ FAILURE' }}
-
-            [Klik di sini untuk lihat detail log](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)
+            CI/CD Pipeline Status untuk ${{ github.repository }}
+            Status: ${{ needs.test.result == 'success' && 'SUKSES ✅' || 'GAGAL ❌' }}
+            Branch: ${{ github.ref_name }}
