@@ -46,7 +46,6 @@ jobs:
     name: Build & Push ke Docker Hub
     runs-on: ubuntu-latest
     needs: test
-    # TAMBAHKAN BARIS DI BAWAH INI:
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
 
     steps:
@@ -70,3 +69,26 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/flask-cicd-demo:latest
             ${{ secrets.DOCKER_USERNAME }}/flask-cicd-demo:${{ github.ref_name }}
+
+  notify:
+    name: Discord Notification
+    runs-on: ubuntu-latest
+    needs: [test, build-and-push]
+    if: always()
+
+    steps:
+      - name: Send Notification
+        uses: appleboy/discord-action@master
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          color: "#4287f5"
+          username: "GitHub Actions Bot"
+          message: |
+            **🚀 CI/CD Pipeline Status**
+            ---------------------------------------
+            **Repository:** ${{ github.repository }}
+            **Branch/Tag:** `${{ github.ref_name }}`
+            **Event:** `${{ github.event_name }}`
+            **Status:** ${{ needs.test.result == 'success' && (needs.build-and-push.result == 'success' || needs.build-and-push.result == 'skipped') && '✅ SUCCESS' || '❌ FAILURE' }}
+
+            [Klik di sini untuk lihat detail log](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)
